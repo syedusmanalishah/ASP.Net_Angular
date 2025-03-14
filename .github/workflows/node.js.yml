@@ -12,7 +12,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: angular-build
-          path: C:\deploy\angular_build
+          path: C:\inetpub\actions-runner\_work\Downloading
 
       - name: Stop IIS Server
         run: |
