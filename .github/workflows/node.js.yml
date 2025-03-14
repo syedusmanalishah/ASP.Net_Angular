@@ -45,6 +45,8 @@ jobs:
           Copy-Item -Recurse -Force "${{ github.workspace }}/PaymentApp_Angular/dist/payment-app/*" "C:\inetpub\wwwroot\angular_app\"
         shell: powershell
 
+
+
       - name: Start IIS Server
         run: |
           net start w3svc
