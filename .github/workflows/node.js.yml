@@ -22,13 +22,13 @@ jobs:
         run: |
           cd "${{ github.workspace }}/PaymentApp_Angular"
           npm install
-        shell: pwsh
+        shell: powershell
 
       - name: Build Angular App
         run: |
           cd "${{ github.workspace }}/PaymentApp_Angular"
           npm run build -- --configuration=production
-        shell: pwsh
+        shell: powershell
 
       - name: Stop IIS Server
         run: |
