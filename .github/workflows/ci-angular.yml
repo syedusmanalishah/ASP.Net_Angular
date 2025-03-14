@@ -1,0 +1,41 @@
+name: CI - Build Angular App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Execution Policy
+        run: Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process -Force
+        shell: powershell
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: |
+          cd "${{ github.workspace }}/PaymentApp_Angular"
+          npm install
+        shell: powershell
+
+      - name: Build Angular App
+        run: |
+          cd "${{ github.workspace }}/PaymentApp_Angular"
+          npm run build -- --configuration=production
+        shell: powershell
+
+      - name: Store Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: angular-build
+          path: ${{ github.workspace }}/PaymentApp_Angular/dist/payment-app
