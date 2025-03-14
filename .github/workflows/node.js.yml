@@ -42,7 +42,7 @@ jobs:
       - name: Deploy to IIS
         run: |
           Remove-Item -Recurse -Force "C:\inetpub\wwwroot\angular_app\*" -ErrorAction Ignore
-          Copy-Item -Recurse -Force "${{ github.workspace }}/PaymentApp_Angular/dist/PaymentApp_Angular/*" "C:\inetpub\wwwroot\angular_app\"
+          Copy-Item -Recurse -Force "${{ github.workspace }}/PaymentApp_Angular/dist/payment-app/*" "C:\inetpub\wwwroot\angular_app\"
         shell: powershell
 
       - name: Start IIS Server
