@@ -16,7 +16,7 @@ jobs:
       - name: Set Execution Policy
         run: Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process -Force
         shell: powershell
-        
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -36,15 +36,14 @@ jobs:
 
       - name: Stop IIS Server
         run: |
-          net stop was /y
           net stop w3svc
         shell: cmd
 
       - name: Deploy to IIS
         run: |
           Remove-Item -Recurse -Force "C:\inetpub\wwwroot\angular_app\*" -ErrorAction Ignore
-          Copy-Item -Recurse -Force "${{ github.workspace }}/PaymentApp_Angular/dist/*" "C:\inetpub\wwwroot\angular_app\"
-        shell: pwsh
+          Copy-Item -Recurse -Force "${{ github.workspace }}/PaymentApp_Angular/dist/PaymentApp_Angular/*" "C:\inetpub\wwwroot\angular_app\"
+        shell: powershell
 
       - name: Start IIS Server
         run: |
