@@ -3,7 +3,7 @@ name: Deploy Angular App to IIS
 on:
   push:
     branches:
-      - main  # Trigger when changes are pushed to main
+      - main
 
 jobs:
   build-and-deploy:
@@ -20,24 +20,29 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          cd ASP.Net_Angular/PaymentApp_Angular
+          cd "${{ github.workspace }}/PaymentApp_Angular"
           npm install
+        shell: pwsh
 
       - name: Build Angular App
         run: |
-          cd ASP.Net_Angular/PaymentApp_Angular
+          cd "${{ github.workspace }}/PaymentApp_Angular"
           npm run build -- --configuration=production
+        shell: pwsh
 
       - name: Stop IIS Server
         run: |
           net stop was /y
           net stop w3svc
+        shell: cmd
 
       - name: Deploy to IIS
         run: |
-          Remove-Item -Recurse -Force "C:\inetpub\wwwroot\react_frontend\*" -ErrorAction Ignore
-          Copy-Item -Recurse -Force "ASP.Net_Angular/PaymentApp_Angular/dist/*" "C:\inetpub\wwwroot\react_frontend\"
+          Remove-Item -Recurse -Force "C:\inetpub\wwwroot\angular_app\*" -ErrorAction Ignore
+          Copy-Item -Recurse -Force "${{ github.workspace }}/PaymentApp_Angular/dist/*" "C:\inetpub\wwwroot\angular_app\"
+        shell: pwsh
 
       - name: Start IIS Server
         run: |
           net start w3svc
+        shell: cmd
