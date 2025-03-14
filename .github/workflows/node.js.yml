@@ -1,38 +1,18 @@
-name: Deploy Angular App to IIS
+name: CD - Deploy Angular to IIS
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch: # Manual Trigger
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Set Execution Policy
-        run: Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process -Force
-        shell: powershell
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
         with:
-          node-version: 18
-
-      - name: Install Dependencies
-        run: |
-          cd "${{ github.workspace }}/PaymentApp_Angular"
-          npm install
-        shell: powershell
-
-      - name: Build Angular App
-        run: |
-          cd "${{ github.workspace }}/PaymentApp_Angular"
-          npm run build -- --configuration=production
-        shell: powershell
+          name: angular-build
+          path: C:\deploy\angular_build
 
       - name: Stop IIS Server
         run: |
@@ -42,12 +22,9 @@ jobs:
       - name: Deploy to IIS
         run: |
           Remove-Item -Recurse -Force "C:\inetpub\wwwroot\angular_app\*" -ErrorAction Ignore
-          Copy-Item -Recurse -Force "${{ github.workspace }}/PaymentApp_Angular/dist/payment-app/*" "C:\inetpub\wwwroot\angular_app\"
+          Copy-Item -Recurse -Force "C:\deploy\angular_build\*" "C:\inetpub\wwwroot\angular_app\"
         shell: powershell
 
-
-
-      - name: Start IIS Server
-        run: |
-          net start w3svc
+      - name: Restart IIS
+        run: iisreset
         shell: cmd
